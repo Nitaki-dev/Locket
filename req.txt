@@ -1,0 +1,4 @@
+tk
+sv_ttk
+pyperclip
+pycryptodome
