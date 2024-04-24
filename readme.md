@@ -11,3 +11,4 @@ when it finished compiling, the exe is located under `\app\dist`
 todo: 
 - fix theme crashing app
 - save the password files to an actual location
+- fix the EDIT function actually edit the service name
