@@ -1,4 +1,4 @@
-import tkinter, pyperclip, sv_ttk, base64, hashlib, sys, ast, ctypes as ct
+import tkinter, pyperclip, sv_ttk, base64, hashlib, sys, ast, os, ctypes as ct
 from tkinter import ttk, messagebox
 from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
@@ -26,6 +26,7 @@ def decrypt(key, data):
     plaintext = cipher.decrypt_and_verify(ciphertext, tag)
     return plaintext.decode()
 
+save_path = str(os.getenv('APPDATA')) + '\\Nitaki\\PasswordManager'
 tree_data = []
 key = ''
 salt = generate_salt(key)
@@ -33,8 +34,11 @@ user_key = derive_key(key.encode(), salt)
 file_selected = 0
 
 def save_passwords():
-    open(f'pass-{file_selected}', 'w').close()
-    file = open(f'pass-{file_selected}', 'w')
+    if not os.path.exists(save_path): 
+        os.makedirs(save_path)
+
+    open(f'{save_path}\\pass-{file_selected}', 'w').close()
+    file = open(f'{save_path}\\pass-{file_selected}', 'w')
 
     i = 0
     for item in tree_data:
@@ -45,10 +49,11 @@ def save_passwords():
 
 def load_passwords():
     global tree_data
-    for i in range(5):
-        print(i)
+    i = 0
+    while True:
+        i += 1
         try:
-            file = open(f'pass-{i}', 'r')
+            file = open(f'{save_path}\\pass-{i}', 'r')
             tree_data = []
 
             try:
@@ -62,10 +67,10 @@ def load_passwords():
                 print(f'Loaded file number {i}')
                 break
             except:
-                print(f'Wrong password for {i}')
+                print(f'Wrong password for file number {i}')
         except:
-            print("No file found, creating new one...")
-            f = open(f'pass-{i}', 'x')
+            print("No file matches the password. Creating new file...")
+            f = open(f'{save_path}\\pass-{i}', 'x')
             file_selected = i
             tree_data = [
                 ("Service", ("Email/Username", "Password")),
