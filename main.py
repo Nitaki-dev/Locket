@@ -46,6 +46,8 @@ def save_passwords():
         i+=1
 
 def load_passwords():
+    if not os.path.exists(save_path): 
+        os.makedirs(save_path)
     global tree_data
     for i in range(5):
         print(i)
@@ -101,7 +103,7 @@ class new_entry(ttk.Frame):
         self.username = ttk.Entry(self)
         self.username.grid(row=3, column=0, padx=5, pady=(0, 10), sticky="ew")
         
-        self.password = ttk.Entry(self, show="*")
+        # self.password = ttk.Entry(self, show="*")
         self.password = ttk.Entry(self)
         self.password.grid(row=5, column=0, padx=5, pady=(0, 10), sticky="ew")
 
@@ -156,21 +158,21 @@ class password_list(ttk.PanedWindow):
 
         self.tree.bind("<Button-1>", self.copy_to_clipboard)
         self.tree.bind("<Button-3>", self.edit_or_delete_menu)
-        # self.tree.bind("<Double-1>", self.edit_item)
 
     def copy_to_clipboard(self, event):
         item = self.tree.identify_row(event.y)
         if item:
+            index = self.tree.index(item)
             column = self.tree.identify_column(event.x)
             app_name = self.tree.item(item, "text")
+            if (index < 2): return
             if column == "#1":
                 value = self.tree.item(item, "values")[0]
-                messagebox.showinfo("Password manager", f"{app_name} username copied to clipboard")
+                messagebox.showinfo("Password manager", f"Your {app_name} username has been copied to your clipboard")
                 pyperclip.copy(value)
             elif column == "#2":
-                value = self.tree.item(item, "values")[1]
-                messagebox.showinfo("Password manager", f"{app_name} password copied to clipboard")
-                pyperclip.copy(value)
+                messagebox.showinfo("Password manager", f"Your {app_name} password has been copied to your clipboard")
+                pyperclip.copy(tree_data[index][1][1])
 
     def edit_or_delete_menu(self, event):
         item = self.tree.identify_row(event.y)
@@ -192,11 +194,26 @@ class password_list(ttk.PanedWindow):
             save_passwords()
 
     def edit_item(self, item):
+        index = self.tree.index(item)
+
         current_values = self.tree.item(item, "values")
         app_name = self.tree.item(item, "text")
 
         edit_window = tkinter.Toplevel(self)
         edit_window.title("Edit Item")
+
+        edit_window.update()
+        DWMWA_USE_IMMERSIVE_DARK_MODE = 20
+        set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
+        get_parent = ct.windll.user32.GetParent
+        hwnd = get_parent(edit_window.winfo_id())
+        rendering_policy = DWMWA_USE_IMMERSIVE_DARK_MODE
+        value = 2
+        value = ct.c_int(value)
+        set_window_attribute(hwnd, rendering_policy, ct.byref(value), ct.sizeof(value))
+        if sys.getwindowsversion().build <= 22000:
+            edit_window.withdraw()
+            edit_window.deiconify()
 
         ttk.Label(edit_window, text="Service").grid(row=0, column=0, padx=5, pady=5, sticky="w")
         ttk.Label(edit_window, text="Username").grid(row=1, column=0, padx=5, pady=5, sticky="w")
@@ -212,17 +229,19 @@ class password_list(ttk.PanedWindow):
 
         password_entry = ttk.Entry(edit_window, width=30)
         password_entry.grid(row=2, column=1, padx=5, pady=5, sticky="ew")
-        password_entry.insert(0, current_values[1])
+        password_entry.insert(0, tree_data[index][1][1])
 
         def update_values():
             new_values = (username_entry.get(), password_entry.get())
             self.tree.item(item, values=new_values)
             for index, entry in enumerate(tree_data):
                 if entry[0] == app_name:
-                    updated_entry = (app_name, new_values)
+                    print(entry[0])
+                    updated_entry = (app_entry.get(), new_values)
                     tree_data[index] = updated_entry
                     break
             save_passwords()
+            self.update_tree()
             edit_window.destroy()
 
         update_button = ttk.Button(edit_window, text="Update", command=update_values)
@@ -232,13 +251,15 @@ class password_list(ttk.PanedWindow):
         for item in self.tree.get_children():
             self.tree.delete(item)
 
+        i=0
         for item in tree_data:
+            i+=1
             if len(item) == 2:
-                name, (desc, other) = item
-                self.tree.insert("", "end", text=name, values=(desc, other))
-            else:
-                name = item[0]
-                self.tree.insert("", "end", text=name, values=("", ""))
+                service, (username, password) = item
+                if i>2:
+                    masked_password = '*' * len(password)
+                    self.tree.insert("", "end", text=service, values=(username, masked_password))
+                else: self.tree.insert("", "end", text=service, values=(username, password))
 
 class App(ttk.Frame):
     def __init__(self, parent):
@@ -295,13 +316,13 @@ def prompt_user_for_password():
     root.geometry("300x128")
     root.resizable(False, False)
 
-    pass_lable = ttk.Label(root, text="Enter your password")
+    pass_lable = ttk.Label(root, text="Enter a password")
     pass_lable.pack(pady=5)
 
     pass_entry = ttk.Entry(root, show='*')
     pass_entry.pack(pady=5)
 
-    button = ttk.Button(root, text="Enter Password", command=get_password)
+    button = ttk.Button(root, text="Confirm", command=get_password)
     button.pack(pady=10)
 
     sv_ttk.set_theme("dark")
