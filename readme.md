@@ -1,11 +1,11 @@
 
 # How to compile:
-`python -m venv password_manager`
+`python -m venv locket`
 `pip3 install -r req.txt`
 
-put main.py and req.txt inside the `password_manager` folder
+put main.py and req.txt inside the `locket` folder
 
-`cd password_manager\Scripts\`
+`cd locket\Scripts\`
 `activate.bat`
 `cd ..`
 `pip install -r req.txt`
@@ -15,13 +15,10 @@ put main.py and req.txt inside the `password_manager` folder
 
 
 open env if you need to recompile:
-`cd env\password_manager\Scripts\`
+`cd env\locket\Scripts\`
 `activate.bat`
 
 compile:
 `pyinstaller --onefile --collect-data sv_ttk main.py`
 
 when it finished compiling, the exe is located under `\env\dist`
-
-todo: 
-- fix the EDIT function actually edit the service name
