@@ -1,4 +1,8 @@
 # Locket
+<p align="center">
+  <img src="locket.png">
+</p>
+
 
 ### What is Locket?
 Locket is a secure and user-friendly password manager built with Python. It uses AES in GCM (Galois Counter Mode) for encryption, providing both confidentiality and integrity. The encryption key is derived from a user-provided password using PBKDF2 with SHA-256, ensuring strong security.
