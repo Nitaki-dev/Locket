@@ -168,10 +168,10 @@ class password_list(ttk.PanedWindow):
             if (index < 2): return
             if column == "#1":
                 value = self.tree.item(item, "values")[0]
-                messagebox.showinfo("Password manager", f"{app_name} username copied to clipboard")
+                messagebox.showinfo("Locket", f"{app_name} username copied to clipboard")
                 pyperclip.copy(value)
             elif column == "#2":
-                messagebox.showinfo("Password manager", f"{app_name} password copied to clipboard")
+                messagebox.showinfo("Locket", f"{app_name} password copied to clipboard")
                 pyperclip.copy(tree_data[index][1][1])
 
     def edit_or_delete_menu(self, event):
@@ -277,7 +277,7 @@ def main_application():
     load_passwords()
 
     root = tkinter.Tk()
-    root.title("Password manager")
+    root.title("Locket")
     root.resizable(False, False)
 
     App(root).pack(expand=True, fill="both")
@@ -312,7 +312,7 @@ def prompt_user_for_password():
             main_application()
 
     root = tkinter.Tk()
-    root.title("Password manager")
+    root.title("Locket")
     root.geometry("300x128")
     root.resizable(False, False)
 
