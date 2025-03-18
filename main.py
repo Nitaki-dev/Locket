@@ -24,7 +24,14 @@ def decrypt(key, data):
     plaintext = cipher.decrypt_and_verify(ciphertext, tag)
     return plaintext.decode()
 
-save_path = str(os.getenv('APPDATA')) + '\\Nitaki\\Locket'
+if os.name == 'nt':
+    save_path = str(os.getenv('APPDATA')) + '\\Nitaki\\Locket'
+else:
+    home_dir = os.path.expanduser("~")
+    save_path = os.path.join(home_dir, '.nitaki', 'Locket')
+
+print(save_path)
+
 tree_data = []
 key = ''
 salt = generate_salt(key)
@@ -35,8 +42,14 @@ def save_passwords():
     if not os.path.exists(save_path): 
         os.makedirs(save_path)
 
-    open(f'{save_path}\\pass-{file_selected}', 'w').close()
-    file = open(f'{save_path}\\pass-{file_selected}', 'w')
+
+    if os.name == 'nt':
+        open(f'{save_path}\\pass-{file_selected}', 'w').close()
+        file = open(f'{save_path}\\pass-{file_selected}', 'w')
+    else:
+        file_path = os.path.join(save_path, f'pass-{file_selected}')
+        open(file_path, 'w').close()
+        file = open(file_path, 'w')
 
     i = 0
     for item in tree_data:
@@ -52,7 +65,10 @@ def load_passwords():
     for i in range(5):
         print(i)
         try:
-            file = open(f'{save_path}\\pass-{i}', 'r')
+            if os.name == 'nt':
+                file = open(f'{save_path}\\pass-{i}', 'r')
+            else:
+                file = open(os.path.join(save_path, f'pass-{i}'), 'r')       
             tree_data = []
 
             try:
@@ -69,7 +85,10 @@ def load_passwords():
                 print(f'Wrong password for {i}')
         except:
             print("No file found, creating new one...")
-            f = open(f'{save_path}\\pass-{i}', 'x')
+            if os.name == 'nt':
+                f = open(f'{save_path}\\pass-{i}', 'x')
+            else:
+                f = open(os.path.join(save_path, f'pass-{i}'), 'x')
             file_selected = i
             tree_data = [
                 ("Service", ("Email/Username", "Password")),
@@ -284,17 +303,19 @@ def main_application():
     sv_ttk.set_theme("dark")
 
     root.update()
-    DWMWA_USE_IMMERSIVE_DARK_MODE = 20
-    set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
-    get_parent = ct.windll.user32.GetParent
-    hwnd = get_parent(root.winfo_id())
-    rendering_policy = DWMWA_USE_IMMERSIVE_DARK_MODE
-    value = 2
-    value = ct.c_int(value)
-    set_window_attribute(hwnd, rendering_policy, ct.byref(value), ct.sizeof(value))
-    if sys.getwindowsversion().build <= 22000:
-        root.withdraw()
-        root.deiconify()
+
+    if os.name == 'nt':
+        DWMWA_USE_IMMERSIVE_DARK_MODE = 20
+        set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
+        get_parent = ct.windll.user32.GetParent
+        hwnd = get_parent(root.winfo_id())
+        rendering_policy = DWMWA_USE_IMMERSIVE_DARK_MODE
+        value = 2
+        value = ct.c_int(value)
+        set_window_attribute(hwnd, rendering_policy, ct.byref(value), ct.sizeof(value))
+        if sys.getwindowsversion().build <= 22000:
+            root.withdraw()
+            root.deiconify()
 
     root.mainloop()
 
@@ -328,17 +349,18 @@ def prompt_user_for_password():
     sv_ttk.set_theme("dark")
     
     root.update()
-    DWMWA_USE_IMMERSIVE_DARK_MODE = 20
-    set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
-    get_parent = ct.windll.user32.GetParent
-    hwnd = get_parent(root.winfo_id())
-    rendering_policy = DWMWA_USE_IMMERSIVE_DARK_MODE
-    value = 2
-    value = ct.c_int(value)
-    set_window_attribute(hwnd, rendering_policy, ct.byref(value), ct.sizeof(value))
-    if sys.getwindowsversion().build <= 22000:
-        root.withdraw()
-        root.deiconify()
+    if os.name == 'nt':
+        DWMWA_USE_IMMERSIVE_DARK_MODE = 20
+        set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
+        get_parent = ct.windll.user32.GetParent
+        hwnd = get_parent(root.winfo_id())
+        rendering_policy = DWMWA_USE_IMMERSIVE_DARK_MODE
+        value = 2
+        value = ct.c_int(value)
+        set_window_attribute(hwnd, rendering_policy, ct.byref(value), ct.sizeof(value))
+        if sys.getwindowsversion().build <= 22000:
+            root.withdraw()
+            root.deiconify()
 
     root.mainloop()
     
