@@ -19,7 +19,7 @@ open env if you need to recompile:
 `activate.bat`
 
 compile:
-`pyinstaller --onefile --noconsole --collect-data sv_ttk main.py`
+`pyinstaller --onefile --collect-data sv_ttk main.py`
 
 when it finished compiling, the exe is located under `\env\dist`
 
