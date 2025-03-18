@@ -24,7 +24,7 @@ def decrypt(key, data):
     plaintext = cipher.decrypt_and_verify(ciphertext, tag)
     return plaintext.decode()
 
-save_path = str(os.getenv('APPDATA')) + '\\Nitaki\\PasswordManager'
+save_path = str(os.getenv('APPDATA')) + '\\Nitaki\\Locket'
 tree_data = []
 key = ''
 salt = generate_salt(key)
@@ -168,10 +168,10 @@ class password_list(ttk.PanedWindow):
             if (index < 2): return
             if column == "#1":
                 value = self.tree.item(item, "values")[0]
-                messagebox.showinfo("Password manager", f"Your {app_name} username has been copied to your clipboard")
+                messagebox.showinfo("Password manager", f"{app_name} username copied to clipboard")
                 pyperclip.copy(value)
             elif column == "#2":
-                messagebox.showinfo("Password manager", f"Your {app_name} password has been copied to your clipboard")
+                messagebox.showinfo("Password manager", f"{app_name} password copied to clipboard")
                 pyperclip.copy(tree_data[index][1][1])
 
     def edit_or_delete_menu(self, event):
