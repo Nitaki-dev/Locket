@@ -1,17 +1,15 @@
 
 create env:
-`python -m venv myEnv`
+`python -m venv password_managercd `
 
 open env:
-`cd app\myEnv\Scripts\`
+`cd env\password_manager\Scripts\`
 `activate.bat`
 
 compile:
-`pyinstaller --onefile --noconsole --collect-data sv_ttkd main.py`
+`pyinstaller --onefile --noconsole --collect-data sv_ttk main.py`
 
-when it finished compiling, the exe is located under `\app\dist`
+when it finished compiling, the exe is located under `\env\dist`
 
 todo: 
-- fix theme crashing app
-- save the password files to an actual location
 - fix the EDIT function actually edit the service name
