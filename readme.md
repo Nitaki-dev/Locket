@@ -54,6 +54,7 @@ source locket/bin/activate
 3. Install dependencies: (You need to do it again)
 ```bash
 pip install -r req.txt
+pip install pyinstaller
 ```
 4. Compile Locket:
 ```
