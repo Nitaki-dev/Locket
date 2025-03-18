@@ -24,12 +24,12 @@ Locket is a secure and user-friendly password manager built with Python. It uses
 
 1. **Clone the Repository:** 
 ```bash
-https://github.com/Nitaki-dev/Locket.git
+git clone https://github.com/Nitaki-dev/Locket.git
 cd locket
 ```
 2. **Install Dependencies:**
 ```bash
-pip install -r requirements.txt
+pip install -r req.txt
 ```
 3. **Run Locket***
 ```bash
@@ -51,9 +51,9 @@ locket\Scripts\activate.bat
 ```bash
 source locket/bin/activate
 ```
-3. Install dependencies:
+3. Install dependencies: (You need to do it again)
 ```bash
-pip install -r requirements.txt
+pip install -r req.txt
 ```
 4. Compile Locket:
 ```
@@ -69,6 +69,6 @@ Locket is licensed under the MIT License.
 Libraries used:
 <br>
 - pycryptodome
-- tkinter
 - pyperclip
+- tkinter
 - sv_ttk
